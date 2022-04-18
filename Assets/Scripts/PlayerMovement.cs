@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController controller;
-
+    //Movement Variables
     public float speed = 12f;
     public float gravity = -9.81f;
     public float jumpHeight = 1f; 
@@ -19,6 +19,10 @@ public class PlayerMovement : MonoBehaviour
     Vector3 velocity;
     bool isGrounded;
 
+    //Ability Variables
+    public int blinkCharges = 3;
+    private bool blinked = false;
+    public float blinkDistance = 7.8f; 
     private void Start()
     {
         tracer = GetComponent<Rigidbody>();
@@ -50,12 +54,55 @@ public class PlayerMovement : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
 
         controller.Move(velocity);
-        
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+         
+    }
+    private void LateUpdate()
+    {
+        if (blinkCharges > 0 && blinked==false)
         {
-            Debug.Log("blink");
-            Vector3 blink = transform.right * x + (transform.forward * z * 7.8f);
-            controller.Move(blink * 100);
+      
+            if (Input.GetKeyDown(KeyCode.S) && Input.GetKey(KeyCode.LeftShift))//Blink Forward by Default
+            {
+                blinkBackwards();
+                blinked = true;
+            }
+            else if (Input.GetKey(KeyCode.LeftShift))//Blink Forward by Default
+            {
+                blink();
+                blinked = true;
+            }
         }
+    }
+
+    //Basic Function for blinking forward
+    void blink()
+    {
+        Debug.Log("blink");
+        Vector3 blink = transform.forward * blinkDistance;
+        controller.Move(blink);
+        StartCoroutine(waitForBlink());
+        blinkCharges--;
+        StartCoroutine(blinkCooldown());
+    }
+
+    void blinkBackwards()
+    {
+        Debug.Log("blinkingBackwards");
+        Vector3 blink = transform.forward * blinkDistance;
+        controller.Move(blink*-1);
+        StartCoroutine(waitForBlink());
+        blinkCharges--;
+        StartCoroutine(blinkCooldown());
+    }
+
+    IEnumerator blinkCooldown()//cooldown per blink
+    {
+        yield return new WaitForSeconds(3.0f);
+        blinkCharges++;
+    }
+    IEnumerator waitForBlink() //additional cooldown to adjust other cooldowns
+    {
+        yield return new WaitForSeconds(.25f);
+        blinked = false;
     }
 }
