@@ -19,8 +19,10 @@ public class TracerAbilities : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift))
            {
             Debug.Log("blink");
+          
             transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z+7.8f);
-            }
+      
+        }
 
         
 
