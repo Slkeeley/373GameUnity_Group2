@@ -19,18 +19,37 @@ public class PlayerMovement : MonoBehaviour
     Vector3 velocity;
     bool isGrounded;
 
-    //Ability Variables
+    //ABILITY VARIABLES
+    //blink vars
     public int blinkCharges = 3;
     private bool blinked = false;
-    public float blinkDistance = 7.8f; 
+    private int blinkType = 0;
+    public float blinkDistance = 7.8f;
+    //Recall Vars
+    public bool canRecall = true;
+    private bool readyToUpdate = true;
+    public Vector3 currPos;
+    public Vector3 pos1;
+    public Vector3 pos2;
+    public Vector3 pos3;
+    public Vector3 pos4;
+    public Vector3 pos5;
     private void Start()
     {
         tracer = GetComponent<Rigidbody>();
+        currPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        pos1 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        pos2 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        pos3 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        pos4 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        pos4 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        //BASIC MOVEMENT FUNCS
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
     
         if(isGrounded && velocity.y <0)
@@ -54,16 +73,33 @@ public class PlayerMovement : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
 
         controller.Move(velocity);
-         
+      //END BASIC MOVEMENT
+      if(readyToUpdate==true)
+        {
+            StartCoroutine(updatePos());
+        }
+
     }
     private void LateUpdate()
     {
-        if (blinkCharges > 0 && blinked==false)
+        if (blinkCharges > 0 && blinked==false)//Blink Requirements
         {
-      
-            if (Input.GetKeyDown(KeyCode.S) && Input.GetKey(KeyCode.LeftShift))//Blink Forward by Default
+            if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.LeftShift))//Blink Backwards
             {
-                blinkBackwards();
+                blinkType = 1;
+                blink();
+                blinked = true;
+            }
+            else if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.LeftShift))//Blink Right
+            {
+                blinkType = 2;
+                blink();
+                blinked = true;
+            }
+            else if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.LeftShift))//Blink Left
+            {
+                blinkType = 3;
+                blink();
                 blinked = true;
             }
             else if (Input.GetKey(KeyCode.LeftShift))//Blink Forward by Default
@@ -71,30 +107,38 @@ public class PlayerMovement : MonoBehaviour
                 blink();
                 blinked = true;
             }
+        }//Blink Ability
+    }
+
+     void blink()//Function To blink in each direction
+    {
+        Vector3 blinkVertical = transform.forward * blinkDistance;
+        Vector3 blinkHorizontal = transform.right * blinkDistance;
+        switch (blinkType)
+        {
+            case 1:
+                controller.Move(blinkVertical * -1);//Blink Backwards
+                break;
+            case 2:
+                controller.Move(blinkHorizontal);//Right
+                break;
+            case 3:
+                controller.Move(blinkHorizontal*-1);//Left 
+                break;
+            default:
+                controller.Move(blinkVertical);//Forward by default
+                break;
         }
-    }
-
-    //Basic Function for blinking forward
-    void blink()
-    {
-        Debug.Log("blink");
-        Vector3 blink = transform.forward * blinkDistance;
-        controller.Move(blink);
+        blinkType = 0;
         StartCoroutine(waitForBlink());
         blinkCharges--;
         StartCoroutine(blinkCooldown());
     }
-
-    void blinkBackwards()
+   
+    void Recall()
     {
-        Debug.Log("blinkingBackwards");
-        Vector3 blink = transform.forward * blinkDistance;
-        controller.Move(blink*-1);
-        StartCoroutine(waitForBlink());
-        blinkCharges--;
-        StartCoroutine(blinkCooldown());
-    }
 
+    }
     IEnumerator blinkCooldown()//cooldown per blink
     {
         yield return new WaitForSeconds(3.0f);
@@ -104,5 +148,18 @@ public class PlayerMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(.25f);
         blinked = false;
+    }
+
+    IEnumerator updatePos()
+    {
+        readyToUpdate = false;
+        pos5 = pos4;
+        pos4 = pos3;
+        pos3 = pos2;
+        pos2 = pos1;
+        pos1 = currPos;
+        currPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        yield return new WaitForSeconds(.5f);
+        readyToUpdate = true;
     }
 }
