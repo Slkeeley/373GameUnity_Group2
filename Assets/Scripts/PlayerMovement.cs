@@ -34,6 +34,15 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 pos3;
     public Vector3 pos4;
     public Vector3 pos5;
+    float currTime = 0f;
+    float timeToMove = 10f;
+    //
+    public Transform c0, c1, c2, c3;
+    public float timeDuration=5f;
+    bool checktoCalculate = false;
+    float u;
+    public Vector3 finalPos; 
+
     private void Start()
     {
         tracer = GetComponent<Rigidbody>();
@@ -49,8 +58,8 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
 
-        //BASIC MOVEMENT FUNCS
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+  //BASIC MOVEMENT FUNCS
+            isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
     
         if(isGrounded && velocity.y <0)
         {
@@ -108,6 +117,14 @@ public class PlayerMovement : MonoBehaviour
                 blinked = true;
             }
         }//Blink Ability
+        if(canRecall==true)
+        {
+            if(Input.GetKey(KeyCode.E))
+            {
+                Recall();
+        
+            }
+        }
     }
 
      void blink()//Function To blink in each direction
@@ -137,12 +154,19 @@ public class PlayerMovement : MonoBehaviour
    
     void Recall()
     {
+        readyToUpdate = false;
+        this.transform.position = Vector3.Lerp(currPos, pos5, currTime / timeToMove);
 
     }
     IEnumerator blinkCooldown()//cooldown per blink
     {
         yield return new WaitForSeconds(3.0f);
         blinkCharges++;
+    }
+    IEnumerator recallCooldown()//cooldown per blink
+    {
+        yield return new WaitForSeconds(12.0f);
+        canRecall = true;
     }
     IEnumerator waitForBlink() //additional cooldown to adjust other cooldowns
     {
@@ -159,7 +183,7 @@ public class PlayerMovement : MonoBehaviour
         pos2 = pos1;
         pos1 = currPos;
         currPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSecondsRealtime(.5f);
         readyToUpdate = true;
     }
 }
