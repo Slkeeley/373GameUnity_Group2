@@ -34,39 +34,37 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 pos3;
     public Vector3 pos4;
     public Vector3 pos5;
-    float currTime = 0f;
-    float timeToMove = 10f;
-    //
-    public Transform c0, c1, c2, c3;
-    public float timeDuration=5f;
-    bool checktoCalculate = false;
-    float u;
-    public Vector3 finalPos; 
 
-    private void Start()
+    public int health = 50;
+    public int healthPool = 150; 
+    private void Awake()
     {
+
         tracer = GetComponent<Rigidbody>();
-        currPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        pos1 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        pos2 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        pos3 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        pos4 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        pos4 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+
+        /*
+                currPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+                pos1 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+                pos2 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+                pos3 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+                pos4 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+                pos4 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+          */
     }
 
     // Update is called once per frame
     void Update()
     {
 
-  //BASIC MOVEMENT FUNCS
-            isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-    
-        if(isGrounded && velocity.y <0)
+        //BASIC MOVEMENT FUNCS
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+        if (isGrounded && velocity.y < 0)
         {
-            velocity.y = -2f; 
+            velocity.y = -2f;
         }
 
-        float x = Input.GetAxis("Horizontal");    
+        float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * x + transform.forward * z;
@@ -74,21 +72,19 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(move * speed * Time.deltaTime);
 
-     /*   if(Input.GetButtonDown("Jump") && isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity); 
-        }
-       */ 
+        /*   if(Input.GetButtonDown("Jump") && isGrounded)
+           {
+               velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity); 
+           }
+          */
         velocity.y += gravity * Time.deltaTime;
 
         controller.Move(velocity);
-      //END BASIC MOVEMENT
-      if(readyToUpdate==true)
-        {
-            StartCoroutine(updatePos());
-        }
+        //END BASIC MOVEMENT
 
+        //RECALL ABILITY 
     }
+
     private void LateUpdate()
     {
         if (blinkCharges > 0 && blinked==false)//Blink Requirements
@@ -125,6 +121,10 @@ public class PlayerMovement : MonoBehaviour
         
             }
         }
+        if(health>healthPool)
+        {
+            health = healthPool; 
+        }
     }
 
      void blink()//Function To blink in each direction
@@ -155,7 +155,7 @@ public class PlayerMovement : MonoBehaviour
     void Recall()
     {
         readyToUpdate = false;
-        this.transform.position = Vector3.Lerp(currPos, pos5, currTime / timeToMove);
+
 
     }
     IEnumerator blinkCooldown()//cooldown per blink
@@ -186,4 +186,6 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSecondsRealtime(.5f);
         readyToUpdate = true;
     }
+
+  
 }
