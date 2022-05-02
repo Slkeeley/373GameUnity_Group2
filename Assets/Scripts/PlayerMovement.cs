@@ -34,6 +34,10 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 pos3;
     public Vector3 pos4;
     public Vector3 pos5;
+    //Pulse Bomb; 
+    public GameObject pulseBomb;
+    public Transform pulseStartPos;
+    private bool bombCharged = true;
 
     public int health = 50;
     public int healthPool = 150; 
@@ -121,7 +125,12 @@ public class PlayerMovement : MonoBehaviour
         
             }
         }
-        if(health>healthPool)
+        if (Input.GetKey(KeyCode.Q) && bombCharged==true)//Pulse Bomb Throw
+        {
+            Instantiate(pulseBomb, new Vector3(pulseStartPos.transform.position.x, pulseStartPos.transform.position.y, pulseStartPos.transform.position.z), Quaternion.identity);
+            bombCharged = false;
+        }
+        if (health>healthPool)
         {
             health = healthPool; 
         }
