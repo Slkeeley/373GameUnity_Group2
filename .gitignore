@@ -3,6 +3,7 @@
 
 #Except the Assets and ProjectSettings folder, as well as the selected Git files.
 !Assets/
+!.meta
 !ProjectSettings/
 !.gitignore
 !.gitattributes
