@@ -5,12 +5,13 @@ using UnityEngine;
 public class PulseBomb : MonoBehaviour
 {
     public float damage = 350f;
-    public float range = 100;
+    public float range;
     public float projectileSpeed = 15;
     private bool moving = true;
     Rigidbody rb;
+
     // Start is called before the first frame update
-    void Start()
+    void Start()//instantiation
     {
         rb = GetComponent<Rigidbody>();
         StartCoroutine(explode());
@@ -23,27 +24,29 @@ public class PulseBomb : MonoBehaviour
             rb.AddForce(Vector3.forward * projectileSpeed);
         }
     }
-    void explosion()
+    void explosion(Vector3 center, float radius)//Explode and damage any props within a short range of the explosion. 
     {
-        RaycastHit hit;
-        if (Physics.SphereCast(this.transform.position, range/2, transform.forward, out hit, range))
-        {
-            PropDestruct prop = hit.transform.GetComponent<PropDestruct>();
 
-            if (prop != null)
+        Collider[] hitColliders = Physics.OverlapSphere(center, radius);
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.tag == "Prop")
             {
+
                 Debug.Log("prop not null");
+                PropDestruct prop = hitCollider.transform.GetComponent<PropDestruct>();
                 prop.TakeDamage(damage);
             }
         }
+
         Destroy(this.gameObject);
     }
-    IEnumerator explode()
+    IEnumerator explode()//behavior before explosion
     {
         yield return new WaitForSeconds(.5f);
         moving = false; 
         yield return new WaitForSeconds(.5f);
-        explosion();
+        explosion(this.transform.position, range);
        
     }
  

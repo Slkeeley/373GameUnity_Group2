@@ -6,6 +6,7 @@ TagManager:
   tags:
   - megaPack
   - miniPack
+  - Prop
   layers:
   - Default
   - TransparentFX
