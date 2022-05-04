@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 pos3;
     public Vector3 pos4;
     public Vector3 pos5;
+
     //Pulse Bomb; 
     public GameObject pulseBomb;
     public Transform pulseStartPos;
@@ -46,15 +47,16 @@ public class PlayerMovement : MonoBehaviour
 
         tracer = GetComponent<Rigidbody>();
 
-        /*
+        
                 currPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
                 pos1 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
                 pos2 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
                 pos3 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
                 pos4 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
                 pos4 = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-          */
+          
     }
+
 
     // Update is called once per frame
     void Update()
@@ -85,8 +87,11 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(velocity);
         //END BASIC MOVEMENT
-
-        //RECALL ABILITY 
+        //UPDATE  POSITION VECTORS
+        if(readyToUpdate)
+        {
+            StartCoroutine(updatePos());
+        }
     }
 
     private void LateUpdate()
@@ -117,12 +122,11 @@ public class PlayerMovement : MonoBehaviour
                 blinked = true;
             }
         }//Blink Ability
-        if(canRecall==true)
+        if(canRecall==true)//Recall Ability
         {
             if(Input.GetKey(KeyCode.E))
             {
-                Recall();
-        
+                Recall(); 
             }
         }
         if (Input.GetKey(KeyCode.Q) && bombCharged==true)//Pulse Bomb Throw
@@ -130,12 +134,14 @@ public class PlayerMovement : MonoBehaviour
             Instantiate(pulseBomb, new Vector3(pulseStartPos.transform.position.x, pulseStartPos.transform.position.y, pulseStartPos.transform.position.z), Quaternion.identity);
             bombCharged = false;
         }
-        if (health>healthPool)
+        if (health>healthPool)//Check for health overflow
         {
             health = healthPool; 
         }
     }
 
+
+    //ABILITY FUNCS
      void blink()//Function To blink in each direction
     {
         Vector3 blinkVertical = transform.forward * blinkDistance;
@@ -163,10 +169,14 @@ public class PlayerMovement : MonoBehaviour
    
     void Recall()
     {
+        canRecall = false;
         readyToUpdate = false;
-
-
+        Debug.Log("recalled");
+        this.transform.position = pos5;
+        StartCoroutine(recallCooldown());
     }
+
+    //COOLDOWNS 
     IEnumerator blinkCooldown()//cooldown per blink
     {
         yield return new WaitForSeconds(3.0f);

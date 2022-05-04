@@ -424,6 +424,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BasicProp (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 332735294085306149, guid: 7cf80cd2d48ad9c449e51ddc5f4dbe5b, type: 3}
+      propertyPath: m_TagString
+      value: Prop
+      objectReference: {fileID: 0}
     - target: {fileID: 332735294085306153, guid: 7cf80cd2d48ad9c449e51ddc5f4dbe5b, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -513,6 +517,10 @@ PrefabInstance:
     - target: {fileID: 332735294085306149, guid: 7cf80cd2d48ad9c449e51ddc5f4dbe5b, type: 3}
       propertyPath: m_Name
       value: BasicProp (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 332735294085306149, guid: 7cf80cd2d48ad9c449e51ddc5f4dbe5b, type: 3}
+      propertyPath: m_TagString
+      value: Prop
       objectReference: {fileID: 0}
     - target: {fileID: 332735294085306153, guid: 7cf80cd2d48ad9c449e51ddc5f4dbe5b, type: 3}
       propertyPath: m_RootOrder
@@ -627,6 +635,10 @@ PrefabInstance:
     - target: {fileID: 332735294085306149, guid: 7cf80cd2d48ad9c449e51ddc5f4dbe5b, type: 3}
       propertyPath: m_Name
       value: BasicProp
+      objectReference: {fileID: 0}
+    - target: {fileID: 332735294085306149, guid: 7cf80cd2d48ad9c449e51ddc5f4dbe5b, type: 3}
+      propertyPath: m_TagString
+      value: Prop
       objectReference: {fileID: 0}
     - target: {fileID: 332735294085306151, guid: 7cf80cd2d48ad9c449e51ddc5f4dbe5b, type: 3}
       propertyPath: m_Enabled

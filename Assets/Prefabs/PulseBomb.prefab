@@ -126,5 +126,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 350
-  range: 100
+  range: 10
   projectileSpeed: 15
