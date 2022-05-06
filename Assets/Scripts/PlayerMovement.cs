@@ -39,6 +39,8 @@ public class PlayerMovement : MonoBehaviour
     public GameObject pulseBomb;
     public Transform pulseStartPos;
     private bool bombCharged = true;
+    private bool ultCharging = false;
+    private float pulseCooldown = 120f;
 
     public int health = 50;
     public int healthPool = 150; 
@@ -131,12 +133,15 @@ public class PlayerMovement : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.Q) && bombCharged==true)//Pulse Bomb Throw
         {
-            Instantiate(pulseBomb, new Vector3(pulseStartPos.transform.position.x, pulseStartPos.transform.position.y, pulseStartPos.transform.position.z), Quaternion.identity);
-            bombCharged = false;
+            PulseBomb();
         }
         if (health>healthPool)//Check for health overflow
         {
             health = healthPool; 
+        }
+        if(ultCharging)
+        {
+            StartCoroutine(ultCooldown());
         }
     }
 
@@ -176,6 +181,12 @@ public class PlayerMovement : MonoBehaviour
         StartCoroutine(recallCooldown());
     }
 
+    void PulseBomb()
+    {
+        Instantiate(pulseBomb, new Vector3(pulseStartPos.transform.position.x, pulseStartPos.transform.position.y, pulseStartPos.transform.position.z), Quaternion.identity);
+        bombCharged = false;
+        ultCharging = true; 
+    }
     //COOLDOWNS 
     IEnumerator blinkCooldown()//cooldown per blink
     {
@@ -206,5 +217,11 @@ public class PlayerMovement : MonoBehaviour
         readyToUpdate = true;
     }
 
+       IEnumerator ultCooldown()//Cooldown for PusleBomb
+    {
+        ultCharging = false;
+        yield return new WaitForSeconds(pulseCooldown);
+        bombCharged = true; 
+    }
   
 }
