@@ -7,6 +7,7 @@ using TMPro;
 public class UI : MonoBehaviour
 {
     public GameObject player;
+    private int playerHealth;
 
     //TEXT OBJECTS
     public TMP_Text hpText;
@@ -16,12 +17,12 @@ public class UI : MonoBehaviour
     public TMP_Text recallCDText;
 
     //SPRITE OBJECTS
-    public GameObject healthCube1;
-    public GameObject healthCube2;
-    public GameObject healthCube3;
-    public GameObject healthCube4;
-    public GameObject healthCube5;
-    public GameObject healthCube6;
+    public GameObject healthCube1; 
+    public GameObject healthCube2; 
+    public GameObject healthCube3; 
+    public GameObject healthCube4; 
+    public GameObject healthCube5; 
+    public GameObject healthCube6; 
     public GameObject ultCharged;
     public GameObject blinksUP;
     public GameObject blinksDown;
@@ -30,7 +31,10 @@ public class UI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UpdateUI();  
+        playerHealth = player.GetComponent<PlayerMovement>().health;
+        UpdateUI();
+        blinksDown.SetActive(false);
+        recallDown.SetActive(false);
     }
 
     // Update is called once per frame
@@ -41,8 +45,54 @@ public class UI : MonoBehaviour
 
     void UpdateUI()
     {
-        hpText.text = player.GetComponent<PlayerMovement>().health.ToString() + "/150";//Player Health
-        //Cube Visualization Function
+        hpText.text = playerHealth.ToString() + "/150";//Player Health
+        cubeCheck();
         blinkChargesText.text = player.GetComponent<PlayerMovement>().blinkCharges.ToString();
+        ultTimer();
+        abilityCheck();
+    }
+
+    void cubeCheck()
+    {
+      
+    }
+
+    void ultTimer()
+    {
+        if(player.GetComponent<PlayerMovement>().bombCharged)
+        {
+            ultCharged.SetActive(true);
+        }
+        else
+        {
+            ultCharged.SetActive(false);
+        }//Bring up the ultimate charged icon if bomb is fully charged
+    }
+
+    void abilityCheck()
+    {
+        if(player.GetComponent<PlayerMovement>().blinkCharges>0)
+        {
+            blinksUP.SetActive(true);
+            blinksDown.SetActive(false);
+        }
+        else
+        {
+            blinksUP.SetActive(false);
+            blinksDown.SetActive(true);
+        }//check if player has any blink charges left
+
+
+        if (player.GetComponent<PlayerMovement>().canRecall == false)//check if player has used the recall ability
+        {
+            recallUP.SetActive(false);
+            recallDown.SetActive(true);
+        }
+        else
+        {
+            recallUP.SetActive(true);
+            recallDown.SetActive(false);
+        }
+
     }
 }

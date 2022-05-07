@@ -38,9 +38,9 @@ public class PlayerMovement : MonoBehaviour
     //Pulse Bomb; 
     public GameObject pulseBomb;
     public Transform pulseStartPos;
-    private bool bombCharged = true;
+    public bool bombCharged = true;
     private bool ultCharging = false;
-    private float pulseCooldown = 120f;
+    private float pulseCooldown = 100f;
 
     public int health = 50;
     public int healthPool = 150; 
