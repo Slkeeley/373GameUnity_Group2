@@ -30,6 +30,7 @@ public class UI : MonoBehaviour
     // Start is called before the first frame update
 
     private bool rcCD = false;
+    private bool ultDown = false;
     void Start()
     {
         playerHealth = player.GetComponent<PlayerMovement>().health;
@@ -55,8 +56,54 @@ public class UI : MonoBehaviour
 
     void cubeCheck()
     {
-      
-    }
+      if(playerHealth<150)
+        {
+            healthCube6.SetActive(false);
+        }
+      else
+        {
+            healthCube6.SetActive(true);
+        }
+
+
+        if (playerHealth < 125)
+        {
+            healthCube5.SetActive(false);
+        }
+        else
+        {
+            healthCube5.SetActive(true);
+        }
+
+        if (playerHealth < 100)
+        {
+            healthCube4.SetActive(false);
+        }
+        else
+        {
+            healthCube4.SetActive(true);
+        }
+
+
+        if (playerHealth < 75)
+        {
+            healthCube3.SetActive(false);
+        }
+        else
+        {
+            healthCube3.SetActive(true);
+        }
+
+        if (playerHealth < 50)
+        {
+            healthCube2.SetActive(false);
+        }
+        else
+        {
+            healthCube2.SetActive(true);
+        }
+
+    }//code is janky AF but should work
 
     void ultTimer()
     {
@@ -67,6 +114,10 @@ public class UI : MonoBehaviour
         else
         {
             ultCharged.SetActive(false);
+            if(ultDown==false)
+            {
+                StartCoroutine(chargeUltText());
+            }
         }//Bring up the ultimate charged icon if bomb is fully charged
     }
 
@@ -111,5 +162,22 @@ public class UI : MonoBehaviour
             recallCDText.text = i.ToString();
         }
         recallCDText.text = "";
+        rcCD = false;
+    }
+
+    IEnumerator chargeUltText()//Cooldown Text for Recall Ability
+    {
+        ultDown=true;
+        ultChargeText.gameObject.SetActive(true);
+        ultChargeText.text = "0"+"%";
+        for (int i = 1; i <100; i++)
+        {
+            yield return new WaitForSeconds(1.0f);
+            ultChargeText.text = i.ToString() + "%";
+        }
+        ultChargeText.text = "";
+        player.GetComponent<PlayerMovement>().bombCharged = true;
+        ultDown = false;
+        ultChargeText.gameObject.SetActive(false);
     }
 }
