@@ -16,10 +16,12 @@ public class TracerGun : MonoBehaviour
     private float nextTimeToFire = 0f;
     private bool firing = false; 
     public GameObject muzzleFlash;
+    public GameObject hitmarker;
     // Start is called before the first frame update
     void Start()
     {
         muzzleFlash.SetActive(false);
+        hitmarker.SetActive(false);
         bullets = ammoCapacity;
     }
 
@@ -64,9 +66,9 @@ public class TracerGun : MonoBehaviour
        if( Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
         {
           PropDestruct prop=  hit.transform.GetComponent<PropDestruct>();
-            if(prop!=null)
+            StartCoroutine(hitmarkerFlash());
+            if (prop!=null)// prop was hit and now must take damage
             {
-                Debug.Log("prop not null");
                 prop.TakeDamage(damage);
             } 
         }      
@@ -83,5 +85,12 @@ public class TracerGun : MonoBehaviour
         //play animation if we make one
         yield return new WaitForSeconds(reloadTime);
         bullets = ammoCapacity; 
+    }
+
+    IEnumerator hitmarkerFlash()
+    {
+        hitmarker.SetActive(true);
+        yield return new WaitForSeconds(.25f);
+        hitmarker.SetActive(false);
     }
 }

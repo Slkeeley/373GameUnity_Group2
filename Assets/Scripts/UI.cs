@@ -48,15 +48,16 @@ public class UI : MonoBehaviour
     void UpdateUI()
     {
         hpText.text = playerHealth.ToString() + "/150";//Player Health
-        cubeCheck();
+        healthCheck();
         blinkChargesText.text = player.GetComponent<PlayerMovement>().blinkCharges.ToString();
         ultTimer();
         abilityCheck();
     }
 
-    void cubeCheck()
+    void healthCheck()
     {
-      if(playerHealth<150)
+        playerHealth = player.GetComponent<PlayerMovement>().health;
+        if (playerHealth<150)
         {
             healthCube6.SetActive(false);
         }
