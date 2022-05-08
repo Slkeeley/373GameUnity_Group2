@@ -28,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
     //Recall Vars
     public bool canRecall = true;
     private bool readyToUpdate = true;
+    public float rcCooldown = 12.0f;
     public Vector3 currPos;
     public Vector3 pos1;
     public Vector3 pos2;
@@ -89,15 +90,19 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(velocity);
         //END BASIC MOVEMENT
-        //UPDATE  POSITION VECTORS
-        if(readyToUpdate)
+   
+        if (canRecall == true)//Recall Ability
         {
-            StartCoroutine(updatePos());
+            if (Input.GetKey(KeyCode.E))
+            {
+                Recall();
+            }
         }
     }
 
     private void LateUpdate()
     {
+        
         if (blinkCharges > 0 && blinked==false)//Blink Requirements
         {
             if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.LeftShift))//Blink Backwards
@@ -124,13 +129,7 @@ public class PlayerMovement : MonoBehaviour
                 blinked = true;
             }
         }//Blink Ability
-        if(canRecall==true)//Recall Ability
-        {
-            if(Input.GetKey(KeyCode.E))
-            {
-                Recall(); 
-            }
-        }
+     
         if (Input.GetKey(KeyCode.Q) && bombCharged==true)//Pulse Bomb Throw
         {
             PulseBomb();
@@ -139,9 +138,15 @@ public class PlayerMovement : MonoBehaviour
         {
             health = healthPool; 
         }
+     
         if(ultCharging)
         {
             StartCoroutine(ultCooldown());
+        }
+
+        if (readyToUpdate)//update Positions for recall
+        {
+            StartCoroutine(updatePos());
         }
     }
 
@@ -174,10 +179,8 @@ public class PlayerMovement : MonoBehaviour
    
     void Recall()
     {
-        canRecall = false;
         readyToUpdate = false;
-        Debug.Log("recalled");
-        this.transform.position = pos5;
+        gameObject.transform.position = new Vector3(pos5.x, pos5.y, pos5.z);
         StartCoroutine(recallCooldown());
     }
 
@@ -195,7 +198,9 @@ public class PlayerMovement : MonoBehaviour
     }
     IEnumerator recallCooldown()//cooldown per blink
     {
-        yield return new WaitForSeconds(12.0f);
+        yield return new WaitForSeconds(.25f);
+        canRecall = false;
+        yield return new WaitForSeconds(rcCooldown);
         canRecall = true;
     }
     IEnumerator waitForBlink() //additional cooldown to adjust other cooldowns

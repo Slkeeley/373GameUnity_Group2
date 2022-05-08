@@ -12,7 +12,6 @@ public class UI : MonoBehaviour
     //TEXT OBJECTS
     public TMP_Text hpText;
     public TMP_Text ultChargeText;
-    public TMP_Text blinkCDText;
     public TMP_Text blinkChargesText;
     public TMP_Text recallCDText;
 
@@ -29,6 +28,8 @@ public class UI : MonoBehaviour
     public GameObject recallUP;
     public GameObject recallDown;
     // Start is called before the first frame update
+
+    private bool rcCD = false;
     void Start()
     {
         playerHealth = player.GetComponent<PlayerMovement>().health;
@@ -87,6 +88,10 @@ public class UI : MonoBehaviour
         {
             recallUP.SetActive(false);
             recallDown.SetActive(true);
+            if (rcCD == false)
+            {
+                StartCoroutine(recallCooldown());
+            }
         }
         else
         {
@@ -94,5 +99,17 @@ public class UI : MonoBehaviour
             recallDown.SetActive(false);
         }
 
+    }
+
+    IEnumerator recallCooldown()//Cooldown Text for Recall Ability
+    {
+        rcCD = true;
+        recallCDText.text = "12";
+        for (int i=11; i >=0; i--)
+        {
+            yield return new WaitForSeconds(1.0f);
+            recallCDText.text = i.ToString();
+        }
+        recallCDText.text = "";
     }
 }
