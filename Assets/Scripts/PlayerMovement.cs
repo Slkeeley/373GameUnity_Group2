@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private bool blinked = false;
     private int blinkType = 0;
     public float blinkDistance = 7.8f;
+    public AudioSource blinkSound; 
     //Recall Vars
     public bool canRecall = true;
     private bool readyToUpdate = true;
@@ -35,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 pos3;
     public Vector3 pos4;
     public Vector3 pos5;
+    public AudioSource recallSound;
 
     //Pulse Bomb; 
     public GameObject pulseBomb;
@@ -154,6 +156,7 @@ public class PlayerMovement : MonoBehaviour
     //ABILITY FUNCS
      void blink()//Function To blink in each direction
     {
+        blinkSound.Play();
         Vector3 blinkVertical = transform.forward * blinkDistance;
         Vector3 blinkHorizontal = transform.right * blinkDistance;
         switch (blinkType)
