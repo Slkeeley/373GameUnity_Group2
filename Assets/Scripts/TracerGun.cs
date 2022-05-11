@@ -17,6 +17,8 @@ public class TracerGun : MonoBehaviour
     private bool firing = false; 
     public GameObject muzzleFlash;
     public GameObject hitmarker;
+    public AudioSource bulletNoise;
+    public AudioSource hitmarkSound;
     // Start is called before the first frame update
     void Start()
     {
@@ -39,13 +41,14 @@ public class TracerGun : MonoBehaviour
             if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
             {
                 nextTimeToFire = Time.time + 1f / fireRate;
+       
                 firing = true;
                 bullets = bullets - 2;
                 Shoot();
             }
             if (Input.GetButtonUp("Fire1"))
             {
-                firing = false;
+                firing = false; 
                 muzzleFlash.SetActive(false);
             }        
         }
@@ -66,6 +69,7 @@ public class TracerGun : MonoBehaviour
        if( Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
         {
           PropDestruct prop=  hit.transform.GetComponent<PropDestruct>();
+
             StartCoroutine(hitmarkerFlash());
             if (prop!=null)// prop was hit and now must take damage
             {
